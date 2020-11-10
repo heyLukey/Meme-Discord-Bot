@@ -7,7 +7,15 @@ client = discord.Client()
 
 # Write messages to log file (with relevant information)
 def log(msg):
-    userMsg = '(' + str(msg.channel) + ' | ' + str(msg.created_at) + ') ' + str(msg.author) + ": " + str(msg.content)
+    if msg.attachments:
+        attachmentString = ''
+        for attachments in msg.attachments:
+            attachmentString += (str(attachments.url) + ' ')
+        finalMsg = str(msg.author) + ": " + str(msg.content) + " | FILES: " + attachmentString
+    if not msg.attachments:
+        finalMsg = str(msg.author) + ": " + str(msg.content)
+
+    userMsg = '(' + str(msg.channel) + ' | ' + str(msg.created_at) + ') ' + finalMsg.rstrip().lstrip()
     toWrite = userMsg + '\n'
     print(userMsg)
     with open("logs.txt", "a", encoding='utf-8') as myFile:
@@ -42,11 +50,11 @@ async def on_message(message):
     # Check message against dictionary of trigger words
     for key in calls:
         # If trigger word is longer than 4 char find with trim
-        if len(key) >= 4:
+        if len(key) >= 3:
             if condensedMsg.find(key) != -1:
                 await send_message(message, key)
         # If trigger is less than 4 words find whole
-        elif len(key) < 4:
+        elif len(key) < 3:
             if re.search(r"\b" + re.escape(key) + r"\b", lowerMsg):
                 await send_message(message, key)
 
