@@ -74,11 +74,11 @@ async def on_message(message):
 
     # Check message against dictionary of trigger words
     for key in calls:
-        # If trigger word is longer than 4 char find with trim
+        # If trigger word is longer than 2 char find with trim
         if len(key) >= 3:
             if condensedMsg.find(key) != -1:
                 await send_message(message, key)
-        # If trigger is less than 4 words find whole
+        # If trigger is less than 3 char find whole
         elif len(key) < 3:
             if re.search(r"\b" + re.escape(key) + r"\b", lowerMsg):
                 await send_message(message, key)
