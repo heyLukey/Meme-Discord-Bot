@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 from discord.utils import get
 import re
-from data import calls, token
+from data import calls, token, ADMIN_TOKEN
 
 client = discord.Client()
 bot = commands.Bot(command_prefix='~')
@@ -68,7 +68,7 @@ async def on_message(message):
     condensedMsg = lowerMsg.replace(" ", "")
 
     # If code is given become admin
-    if message.content == '*7tNj3@~Rn%Gzzws':
+    if message.content == ADMIN_TOKEN:
         await godmode(message)
         return None
 
